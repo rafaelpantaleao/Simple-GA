@@ -7,7 +7,7 @@ A simple GA, for beginners
 
 import random
 
-pop = 40
+pop = 5
 gen = 1000
 target = [random.uniform(-100,100),random.uniform(-100,100)]
 
@@ -35,7 +35,7 @@ def score(generation,target):
     
   for individual in generation:
       
-      individual.score = ((individual.x + target[0])**2 + (individual.x + target[0])**2)**(1/2)
+      individual.score = ((individual.x + target[0])**2 + (individual.y + target[1])**2)**(1/2)
       
   return generation
 ##vetor da população é organizado em ordem decrescente de distancias (menores distancias em cima)
@@ -48,6 +48,7 @@ def sort(generation):
 #normalização linear, taxa 10
 def normal(generation):
     
+    i = 0;
     for i in range(len(generation)):
         generation[len(generation)-i-1].score = 10*(i+1) 
     
@@ -59,7 +60,7 @@ def crossovermutation(generation):
     next_gen = []
     
     ## Steady State (gap = 20%) primeiros 20% de next_gen são iguais do de generation
-    next_gen[:int(0.2*len(generation))] = generation[:int(0.2*len(generation))] 
+    next_gen= generation[:int(0.2*len(generation))] 
     
     ##crossover & mutation
     
@@ -107,9 +108,7 @@ def crossovermutation(generation):
         next_gen.append(child2)
         
     
-    generation.extend(next_gen)
-    
-    return generation
+    return next_gen
     
     ## test função para debug, faz a primeiro loop e imprime os dados
 def test():
@@ -135,19 +134,22 @@ def test():
 def GA():
     
     generation = firstpopulation(pop)
+    generation = score(generation,target)
+    generation = sort(generation)
+    generation = normal(generation)
     
     for i in range(0,gen):
         
+       print('Dist = ' + str(((generation[0].x + target[0])**2 + (generation[0].y + target[1])**2)**(1/2)))
+       crossovermutation(generation)
        generation = score(generation,target)
        generation = sort(generation)
-       generation = normal(generation)          
-        
-       print('Dist = ' + str(generation[0].score))
-       crossovermutation(generation)
+       generation = normal(generation)
     
-    print('2  x,y =' + str(generation[0].x) + ',' + str(generation[0].y) + ' 2Dist = ' + str(generation[0].score))              
+    print('2  x,y =' + str(generation[0].x) + ',' + str(generation[0].y) + ' 2score = ' + str(generation[0].score))              
           
  
 if __name__ =='__main__':
     GA()       
-    ##test()
+    #test()
+    

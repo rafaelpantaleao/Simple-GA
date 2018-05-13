@@ -7,7 +7,7 @@ A simple GA, for beginners
 
 import random
 
-pop = 5
+pop = 100
 gen = 1000
 target = [random.uniform(-100,100),random.uniform(-100,100)]
 
@@ -67,16 +67,19 @@ def crossovermutation(generation):
     for _ in range(0,int(0.8*len(generation)/2)):
         
         #torneio
-        ## problema, não encontrei uma maneira facil de fazer com que o mesmo parent n seja usado varias vezes...
+        
         parent1 = random.choice(generation)
         j = random.choice(generation)
         if parent1.score < j.score:
             parent1 = j
-            
+        generation.remove(parent1)
+        
         parent2 = random.choice(generation)
         k = random.choice(generation)
         if parent2.score < k.score:
             parent2 = k
+        generation.remove(parent2)
+        
         
         #crossover aritmético
         n1 = random.random()
@@ -88,6 +91,7 @@ def crossovermutation(generation):
         
         child1.x = n1 * parent1.x + n2 * parent2.x
         child1.y = n1 * parent1.y + n2 * parent2.y
+        
         child2.x = n3 * parent1.x + n4 * parent2.x
         child2.y = n3 * parent1.y + n4 * parent2.y  
         
@@ -119,15 +123,15 @@ def test():
     generation = normal(generation)
     
     for i in range(0,len(generation)):
-        print('x,y =' + str(generation[i].x) + ',' + str(generation[i].y) + ' Dist = ' + str(generation[i].score))
+        print('x,y =' + str(generation[i].x) + ',' + str(generation[i].y) + ' Score = ' + str(generation[i].score))
    
-    crossovermutation(generation)
+    generation = crossovermutation(generation)
     generation = score(generation,target)
     generation = sort(generation)
     generation = normal(generation)
     
     for i in range(0,len(generation)):
-        print('2  x,y =' + str(generation[i].x) + ',' + str(generation[i].y) + ' 2Dist = ' + str(generation[i].score))
+        print('2  x,y =' + str(generation[i].x) + ',' + str(generation[i].y) + ' Score = ' + str(generation[i].score))
      
     ##  GA função final, imprime as distâncias do mais apto a kd geração (objetivo é que sempre diminua) 
     ## também imprime o resultado optimo encontrado no final do GA
@@ -138,18 +142,26 @@ def GA():
     generation = sort(generation)
     generation = normal(generation)
     
-    for i in range(0,gen):
+    for _ in range(0,gen):
         
        print('Dist = ' + str(((generation[0].x + target[0])**2 + (generation[0].y + target[1])**2)**(1/2)))
-       crossovermutation(generation)
+       
+       generation = crossovermutation(generation)
        generation = score(generation,target)
        generation = sort(generation)
        generation = normal(generation)
     
-    print('2  x,y =' + str(generation[0].x) + ',' + str(generation[0].y) + ' 2score = ' + str(generation[0].score))              
+    print(' target = ' + str(target[0]) + ',' + str(target[1]) )
+    print(' x,y =' + str(generation[0].x) + ' , ' + str(generation[0].y) + ' Score = ' + str(generation[0].score))              
           
  
 if __name__ =='__main__':
     GA()       
     #test()
     
+
+
+
+
+    
+

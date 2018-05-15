@@ -60,11 +60,12 @@ def crossovermutation(generation):
     next_gen = []
     
     ## Steady State (gap = 20%) primeiros 20% de next_gen são iguais do de generation
-    next_gen= generation[:int(0.2*len(generation))] 
+    gap = 0.2
+    next_gen= generation[:int(gap*len(generation))] 
     
     ##crossover & mutation
     
-    for _ in range(int(0.8*len(generation)/2)):
+    for _ in range(int((1-gap)*len(generation)/2)):
         
         #torneio
        
